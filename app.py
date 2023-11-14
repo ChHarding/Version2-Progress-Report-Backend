@@ -12,7 +12,7 @@ stripe.api_key = stripe_keys['secret_key']
 app = Flask(__name__)
 
 # Load the cleaned data into a pandas dataframe
-df = pd.read_excel('/Users/khinezaw/Documents/MHCI/E-Commerce-Clothing-Version2/Version2-Progress-Report-Backend/ecommerce_clothing.xlsx')
+df = pd.read_excel('/ecommerce_clothing.xlsx')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
