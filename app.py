@@ -1,15 +1,21 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 import os
+import stripe
+stripe.api_key = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc'
+YOUR_DOMAIN = 'http://127.0.0.1:4242'
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates',
+                      static_folder='static')
 
 # Load the cleaned data into a pandas dataframe
-df = pd.read_excel('/ecommerce_clothing.xlsx')
+df = pd.read_excel('ecommerce_clothing.xlsx')  
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        form_data = request.form
+        print(form_data)
         # Get the search query and filter values from the form
         search_query = request.form['search_query']
         max_price = request.form['max_price']
@@ -24,34 +30,54 @@ def index():
         
         # Render the template with the filtered dataframe (sorted by rating and price)
         filtered_df = filtered_df.sort_values(['average_review_rating', 'price'], ascending=[False, True])
-        return render_template('index.html', products=filtered_df.to_dict('records'))
+        return render_template('index.html', products=filtered_df.to_dict('records'),
+                               search=search_query, max_price=max_price, min_rating=min_rating)
+
     else:
         # Render the template with no dataframe at the start
-        return render_template('index.html')
-    
-@app.route('/')
-def index():
-    return render_template('index.html', key=stripe_keys['publishable_key'])
+        template =render_template('index.html')
+        return template
 
-@app.route('/charge', methods=['POST'])
-def charge():
-    # Amount in cents
-    amount = 500
+@app.route('/checkout', methods=['POST'])
+def create_checkout_session():
 
-    customer = stripe.Customer.create(
-        email='customer@example.com',
-        source=request.form['stripeToken']
+    # get product_name and price from form in selection table
+    product_name = request.form['product_name']
+    unit_amount = int(float(request.form['price']) * 100) # in cents!
+    image_url = "https://media.istockphoto.com/id/1064209182/photo/feeling-casual.webp?s=2048x2048&w=is&k=20&c=AV1PrS9P2ag7OcvF_WxygFhphnHWPN1LTo6fMNMk4GA="  #request.form['image_name']
+
+    # create product for this name (stripe will give it a unique ID) and price for that product
+    #product = stripe.Product.create(name=product_name) # product object
+      
+    product = stripe.Product.create(
+        name=product_name,
+        images=[image_url],   
     )
 
-    charge = stripe.Charge.create(
-        customer=customer.id,
-        amount=amount,
-        currency='usd',
-        description='Flask Charge'
+    price = stripe.Price.create(
+        product=product.id,
+        unit_amount=unit_amount,
+        currency='usd'
     )
 
-    return render_template('charge.html', amount=amount)
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    # Provide the id of the Price object (which is also linked to the product, i.e. knows its name)
+                    'price': price.id, # in cents!
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            #success_url=YOUR_DOMAIN + '/success.html',
+            #cancel_url=YOUR_DOMAIN + '/cancel.html',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, port=4242)

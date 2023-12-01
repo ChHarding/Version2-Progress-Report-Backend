@@ -141,7 +141,13 @@
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.price }}</td>
                 <td>{{ product.average_review_rating }}</td>
-               
+                <td>
+                    <form action="/checkout" method="POST" target="_blank">
+                        <input type="hidden" name="product_name" value="{{ product.product_name }}">
+                        <input type="hidden" name="price" value="{{ product.price }}">
+                        <input type="submit" value="Buy Now!">
+                    </form>
+                </td>
                 </tr>
             {% endfor %}
             </tbody>
