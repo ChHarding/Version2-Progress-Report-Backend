@@ -29,7 +29,7 @@ def index():
         # Render the template with the filtered dataframe (sorted by rating and price)
         filtered_df = filtered_df.sort_values(['average_review_rating', 'price'], ascending=[False, True])
         return render_template('index.html', products=filtered_df.to_dict('records'), 
-                               search=search_query, max_price=max_price, min_rating=min_rating)
+                               search=search_query, max_price=max_price, min_rating=min_rating, )
 
     else:
         # Render the template with no dataframe at the start
@@ -55,6 +55,12 @@ def charge():
 
     return render_template('charge.html', amount=amount)
 
+@app.route('/home/', methods=['GET', 'POST'])
+def home():
+    return render_template('home.html')
+@app.route('/sucess/', methods=['GET', 'POST'])
+def about():
+    return render_template('sucess.html')
 
 if __name__ == '__main__':
     app.run(debug=False)
