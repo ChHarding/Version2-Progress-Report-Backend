@@ -16,3 +16,6 @@
 11. Click on buy now button to select.
 12. Continue the pythin file if necessary. You will land to check out page. 
 <img width="1297" alt="Screen Shot 2023-12-04 at 5 53 27 PM" src="https://github.com/kzaw7/Version2-Progress-Report-Backend/assets/74020237/36adcc4c-ac05-425d-9f08-04f8699158c5">
+Limitations
+The hamburger icon will not show anything when clicked
+The "view options" and "add to cart" buttons will not take to anywhere unless I add more functions in Python file.
