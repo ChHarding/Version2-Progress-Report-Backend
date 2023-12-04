@@ -44,9 +44,9 @@ def create_checkout_session():
     # get product_name and price from form in selection table
     product_name = request.form['product_name']
     unit_amount = int(float(request.form['price']) * 100) # in cents!
-    image_url = "https://media.istockphoto.com/id/1064209182/photo/feeling-casual.webp?s=2048x2048&w=is&k=20&c=AV1PrS9P2ag7OcvF_WxygFhphnHWPN1LTo6fMNMk4GA="  #request.form['image_name']
+    image_url = "https://media.istockphoto.com/id/178851955/photo/flowery-evase-bateau-yellow-dress.jpg?s=2048x2048&w=is&k=20&c=g_vtLtL-644fOzFD2UulMORKDRhNN0bkKVHp9L1cByM="  #request.form['image_name']
 
-    # create product for this name (stripe will give it a unique ID) and price for that product
+    #create product for this name (stripe will give it a unique ID) and price for that product
     #product = stripe.Product.create(name=product_name) # product object
       
     product = stripe.Product.create(
@@ -70,7 +70,7 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            #success_url=YOUR_DOMAIN + '/success.html',
+            success_url=YOUR_DOMAIN + '/success.html',
             #cancel_url=YOUR_DOMAIN + '/cancel.html',
         )
     except Exception as e:
