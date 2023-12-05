@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 import os
 import stripe
+
+# Added stripe API keys 
 stripe.api_key = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc'
 YOUR_DOMAIN = 'http://127.0.0.1:4242'
 
@@ -16,6 +18,7 @@ def index():
     if request.method == 'POST':
         form_data = request.form
         print(form_data)
+        
         # Get the search query and filter values from the form
         search_query = request.form['search_query']
         max_price = request.form['max_price']
@@ -37,7 +40,7 @@ def index():
         # Render the template with no dataframe at the start
         template =render_template('index.html')
         return template
-
+# From here will be about the checkout page
 @app.route('/checkout', methods=['POST'])
 def create_checkout_session():
 
