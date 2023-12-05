@@ -1,0 +1,60 @@
+
+The Developer's Guide
+-	There are only two main files: app.py and index.html. All the other files are also important stuff that helps to run those files. 
+-	The main software and libraries that need to be installed is python, pip, pandas, flask, openxyl, and stripe. 
+ 
+-	Stripe needs to be installed because here are the stripe keys stripe.api_key = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc'
+
+-	Pandas data frame is needed because it’s connecting data frame with excel sheet. df = pd.read_excel('ecommerce_clothing.xlsx')  
+
+-	@app.route('/', methods=['GET', 'POST']) shows home page at the start this page include search_query = request.form['search_query']
+-	        max_price = request.form['max_price']
+-	        min_rating = request.form['min_rating']
+in Python Flask framework. 
+-	else:
+        # Render the template with no dataframe at the start
+        template =render_template('index.html')
+        return template
+-	Enter any clothing name in the search box. Type any maximum amount. Choose rating. 
+-	Then enter submit. Example: Dress in search box, 300 in price and 3.5 stars in Minimum Rating. 
+You will see a bunch of clothing product names, prices, average review ratings and “buy now” buttons. Click on the button and it will take you to the Stripe check out page right away. If not, press continue in app.py in Visual Studio code. 
+ 
+-	This part is written in Python.  filtered_df = df[df['product_name'].str.contains(search_query, case=False)]
+-	        if max_price:
+-	            filtered_df = filtered_df[filtered_df['price'] <= float(max_price)]
+-	        if min_rating:
+-	            filtered_df = filtered_df[filtered_df['average_review_rating'] >= float(min_rating)]
+-	        
+-	        # Render the template with the filtered dataframe (sorted by rating and price)
+-	        filtered_df = filtered_df.sort_values(['average_review_rating', 'price'], ascending=[False, True])
+-	        return render_template('index.html', products=filtered_df.to_dict('records'),
+-	                               search=search_query, max_price=max_price, min_rating=min_rating)
+
+-	@app.route('/checkout', methods=['POST'])  from here is about the check out page. 
+-	
+-	# get product_name and price from form in selection table
+-	    product_name = request.form['product_name']
+-	    unit_amount = int(float(request.form['price']) * 100) # in cents!
+-	    image_url = "https://media.istockphoto.com/id/178851955/photo/flowery-evase-bateau-yellow-dress.jpg?s=2048x2048&w=is&k=20&c=g_vtLtL-644fOzFD2UulMORKDRhNN0bkKVHp9L1cByM="  #request.form['image_name']
+
+
+-	When you run app.py and navigate to http://127.0.0.1:4242
+
+-	There will be only two main pages: The home page  
+
+-	and the checkout page. 
+ 
+
+-	ecommerce_clothing.xlsx file is the excel sheet that include data. 
+-	.gitignore file is a configuration file used by Git to specify which files and directories should be ignored and not tracked by version control. When working on a software project and using Git for version control, there are often files or directories that we don't want to include in Git repository. Those files will be specified in this file to be ignored by git. 
+
+o	Known Issues: 
+o	The hamburger icon on the home page will not show anything when clicked.
+o	The "view options" and "add to cart" buttons will not take to anywhere unless I add more functions in the Python file.
+o	The checkout page is just a demonstration, and it will not take you anywhere even when you enter your information. 
+
+o	Future work:
+o	Add image column in excel sheet.
+o	Add images’ URL in excel sheet.
+o	Need to link “view options" and "add to cart" button with functions. 
+
